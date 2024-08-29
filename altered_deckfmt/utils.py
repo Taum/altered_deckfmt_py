@@ -13,7 +13,7 @@ def parse_decklist(string: str, separator) -> dict[str, list[tuple[int, str]]]:
     return card_sets
 
 
-def string_to_base64(binary_string: str) -> int:
+def string_to_base64(binary_string: str) -> str:
     num_bytes = (len(binary_string) + 7) // 8 * 8
     binary_string = binary_string.ljust(num_bytes, "0")
     binary_bytes = bytes(
@@ -23,7 +23,7 @@ def string_to_base64(binary_string: str) -> int:
     return str(base64.b64encode(binary_bytes))[2:-1]
 
 
-def base64_to_string(encoded_string):
+def base64_to_string(encoded_string: str) -> str:
     decoded = base64.b64decode(encoded_string)
     binary_string = bin(int.from_bytes(decoded))[2:]
     num_bytes = (len(binary_string) + 7) // 8 * 8
@@ -31,8 +31,8 @@ def base64_to_string(encoded_string):
     return binary_string.zfill(num_bytes)
 
 
-def encode_chunk(value, size):
+def encode_chunk(value: int, size: int) -> str:
     return format(value, f"0{size}b")
 
-def decode_chunk(string, start, size):
+def decode_chunk(string: str, start: int, size: int) -> int:
     return int(string[start:(start + size)], 2)

@@ -33,7 +33,7 @@ class TestEncoding(unittest.TestCase):
                 self.assertEqual(result, decklist)
 
     @staticmethod
-    def read_decklist(decklist_file):
+    def read_decklist(decklist_file) -> str:
 
         with open(f"./tests/decklists/{decklist_file}") as f:
             return f.read()

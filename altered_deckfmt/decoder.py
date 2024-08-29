@@ -31,7 +31,7 @@ def decode(string: str) -> str:
     return result
 
 
-def decode_header(string):
+def decode_header(string: str) -> tuple[int, int]:
     # 4 bits for the version
     version = decode_chunk(string, 0, DeckFMT.VERSION_BITS)
     if version != 1:
@@ -47,7 +47,7 @@ def decode_header(string):
     return version, group_count
 
 
-def decode_set_group(string, index):
+def decode_set_group(string: str, index: int) -> tuple[int, str, int]:
     set_num = decode_chunk(string, index, DeckFMT.SET_COUNT_BITS)
     set_code = CardSet(set_num).name
     index += DeckFMT.SET_COUNT_BITS
@@ -59,7 +59,7 @@ def decode_set_group(string, index):
 
     return index, set_code, card_count
 
-def decode_card_ref_quantity(string, index):
+def decode_card_ref_quantity(string: str, index: int) -> tuple[int, int]:
     quantity = decode_chunk(string, index, DeckFMT.CARD_QUANTITY_BITS)
     index += DeckFMT.CARD_QUANTITY_BITS
 
@@ -70,7 +70,7 @@ def decode_card_ref_quantity(string, index):
     
     return index, quantity
 
-def decode_card(string, index):
+def decode_card(string: str, index: int) -> tuple[int, str, int, str, int]:
     faction_num = decode_chunk(string, index, DeckFMT.CARD_FACTION_BITS)
     faction_code = Faction(faction_num).name
     index += DeckFMT.CARD_FACTION_BITS
@@ -91,7 +91,7 @@ def decode_card(string, index):
     return index, faction_code, number_in_faction, rarity_code, unique_id
 
 
-def build_card_referece(card_set, faction, number, rarity, unique_id):
+def build_card_referece(card_set: str, faction: str, number: int, rarity: str, unique_id: int) -> str:
     if faction != "NE":
         return f"ALT_{card_set}_B_{faction}_{number:02d}_{rarity}" + (f"_{unique_id}" if unique_id else "")
     else:

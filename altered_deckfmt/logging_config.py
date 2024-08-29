@@ -2,7 +2,7 @@ import logging
 from logging.config import dictConfig
 
 
-def setup_logging(log_level=logging.DEBUG):
+def setup_logging(log_level=logging.DEBUG) -> None:
     """Set up logging configuration."""
     logging_config = {
         'version': 1,
