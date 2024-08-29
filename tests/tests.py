@@ -11,11 +11,14 @@ class TestEncoding(unittest.TestCase):
                 "ECAU0jEoUoInItIlUqUkUmErEuYwKLkyGxo2E4Y+E+QIuLhK1TpMGMRNlOCPRfpOROUA",
             ),
             ("list_2sets.txt", "ECAjFDNIdKNLNQNRZUdZFaJadcNeQESOrRSTjTwA"),
-            ("list_uniques.txt", "EBAVmDGEeGGJWJOIKKaMOPIvqUaTOWFFw4cS/EShnFW6XamRm3mCvIA="),
+            (
+                "list_uniques.txt",
+                "EBAVmDGEeGGJWJOIKKaMOPIvqUaTOWFFw4cS/EShnFW6XamRm3mCvIA=",
+            ),
             ("list_yzmir.txt", "EBAk3DNQrEPHVKmIvGLLHMPONZvTFcuZvVPWLYHaHZA="),
             ("test_extd_qty.txt", "EBAgTSZQ"),
             # ("test_long_uniq.txt", "EBASFnwTSWfJw9Z8v/1nzAAWfMDlZ///1n+JAWfL/8A="),  # faulty
-            ("test_mana_orb.txt", "EBAg3CN8LhA=")
+            ("test_mana_orb.txt", "EBAg3CN8LhA="),
         ]
 
     def test_encode_string(self):
@@ -37,7 +40,7 @@ class TestEncoding(unittest.TestCase):
 
         with open(f"./tests/decklists/{decklist_file}") as f:
             return f.read()
-        
+
 
 if __name__ == "__main__":
     unittest.main()

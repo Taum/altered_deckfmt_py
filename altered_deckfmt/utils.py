@@ -34,5 +34,6 @@ def base64_to_string(encoded_string: str) -> str:
 def encode_chunk(value: int, size: int) -> str:
     return format(value, f"0{size}b")
 
+
 def decode_chunk(string: str, start: int, size: int) -> int:
-    return int(string[start:(start + size)], 2)
+    return int(string[start : (start + size)], 2)

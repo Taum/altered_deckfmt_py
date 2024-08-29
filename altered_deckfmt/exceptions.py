@@ -1,5 +1,3 @@
-
-
 class AlteredDeckFMT(Exception):
     pass
 

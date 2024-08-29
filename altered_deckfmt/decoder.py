@@ -21,7 +21,9 @@ def decode(string: str) -> str:
         for _ in range(card_count):
             index, quantity = decode_card_ref_quantity(string, index)
             index, faction, number, rarity, unique_id = decode_card(string, index)
-            reference = build_card_referece(set_code, faction, number, rarity, unique_id)
+            reference = build_card_referece(
+                set_code, faction, number, rarity, unique_id
+            )
 
             logger.debug(f"Parsed {quantity} units of '{reference}'")
 
@@ -43,7 +45,7 @@ def decode_header(string: str) -> tuple[int, int]:
     if group_count == 0:
         raise DecodeError(f"Invalid number of groups: {group_count}")
     logger.debug(f"Found {group_count} set groups")
-    
+
     return version, group_count
 
 
@@ -59,16 +61,20 @@ def decode_set_group(string: str, index: int) -> tuple[int, str, int]:
 
     return index, set_code, card_count
 
+
 def decode_card_ref_quantity(string: str, index: int) -> tuple[int, int]:
     quantity = decode_chunk(string, index, DeckFMT.CARD_QUANTITY_BITS)
     index += DeckFMT.CARD_QUANTITY_BITS
 
     if quantity == 0:
-        extended_quantity = decode_chunk(string, index, DeckFMT.CARD_EXTENDED_QUANTITY_BITS)
+        extended_quantity = decode_chunk(
+            string, index, DeckFMT.CARD_EXTENDED_QUANTITY_BITS
+        )
         quantity = extended_quantity + 3
         index += DeckFMT.CARD_EXTENDED_QUANTITY_BITS
-    
+
     return index, quantity
+
 
 def decode_card(string: str, index: int) -> tuple[int, str, int, str, int]:
     faction_num = decode_chunk(string, index, DeckFMT.CARD_FACTION_BITS)
@@ -91,9 +97,13 @@ def decode_card(string: str, index: int) -> tuple[int, str, int, str, int]:
     return index, faction_code, number_in_faction, rarity_code, unique_id
 
 
-def build_card_referece(card_set: str, faction: str, number: int, rarity: str, unique_id: int) -> str:
+def build_card_referece(
+    card_set: str, faction: str, number: int, rarity: str, unique_id: int
+) -> str:
     if faction != "NE":
-        return f"ALT_{card_set}_B_{faction}_{number:02d}_{rarity}" + (f"_{unique_id}" if unique_id else "")
+        return f"ALT_{card_set}_B_{faction}_{number:02d}_{rarity}" + (
+            f"_{unique_id}" if unique_id else ""
+        )
     else:
         # For some reason the Mana Token has its number with a single digit instead of 2
         return f"ALT_{card_set}_B_{faction}_{number}_{rarity}"

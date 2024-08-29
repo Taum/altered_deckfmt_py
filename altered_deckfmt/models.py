@@ -9,7 +9,7 @@ class FMTEnumMeta(EnumMeta):
             return super().__getitem__(name)
         except KeyError:
             raise EncodeError(f"Code '{name}' could not be converted to {cls.__name__}")
-        
+
 
 class FMTEnum(Enum, metaclass=FMTEnumMeta):
     @classmethod
