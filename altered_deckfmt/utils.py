@@ -1,6 +1,8 @@
 import base64
 from collections import defaultdict
 
+from .exceptions import EncodeError
+
 
 def parse_decklist(string: str, separator) -> dict[str, list[tuple[int, str]]]:
     card_sets = defaultdict(list)
@@ -33,6 +35,8 @@ def base64_to_string(encoded_string: str) -> str:
 
 
 def encode_chunk(value: int, size: int) -> str:
+    if value >= 2**size:
+        raise EncodeError(f"Can't encode the number '{value}' in {size} bits")
     return format(value, f"0{size}b")
 
 
