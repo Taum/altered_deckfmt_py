@@ -3,7 +3,7 @@ import unittest
 from altered_deckfmt import decode, encode
 
 
-class TestEncoding(unittest.TestCase):
+class TestDeckFMT(unittest.TestCase):
     def setUp(self) -> None:
         self.decklist_files = [
             (
