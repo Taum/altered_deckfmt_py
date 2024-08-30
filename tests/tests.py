@@ -17,7 +17,7 @@ class TestEncoding(unittest.TestCase):
             ),
             ("list_yzmir.txt", "EBAk3DNQrEPHVKmIvGLLHMPONZvTFcuZvVPWLYHaHZA="),
             ("test_extd_qty.txt", "EBAgTSZQ"),
-            # ("test_long_uniq.txt", "EBASFnwTSWfJw9Z8v/1nzAAWfMDlZ///1n+JAWfL/8A="),  # faulty
+            ("test_long_uniq.txt", "EBARFnwTSWfJw9Z8wOVn///A"),
             ("test_mana_orb.txt", "EBAg3CN8LhA="),
         ]
 
