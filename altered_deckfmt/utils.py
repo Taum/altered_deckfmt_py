@@ -14,10 +14,11 @@ def parse_decklist(string: str, separator) -> dict[str, list[tuple[int, str]]]:
 
 
 def string_to_base64(binary_string: str) -> str:
-    num_bytes = (len(binary_string) + 7) // 8 * 8
-    binary_string = binary_string.ljust(num_bytes, "0")
+    num_bits = len(binary_string)
+    padded_num_bits = num_bits if num_bits % 8 == 0 else num_bits + 8 - (num_bits % 8)
+    binary_string = binary_string.ljust(padded_num_bits, "0")
     binary_bytes = bytes(
-        int(binary_string[i : i + 8], 2) for i in range(0, num_bytes, 8)
+        int(binary_string[i : i + 8], 2) for i in range(0, padded_num_bits, 8)
     )
 
     return str(base64.b64encode(binary_bytes))[2:-1]

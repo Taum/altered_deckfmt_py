@@ -8,9 +8,9 @@ class TestEncoding(unittest.TestCase):
         self.decklist_files = [
             (
                 "list_1offs.txt",
-                "ECAU0jEoUoInItIlUqUkUmErEuYwKLkyGxo2E4Y+E+QIuLhK1TpMGMRNlOCPRfpOROUA",
+                "ECAU0jEoUoInItIlUqUkUmErEuYwKLkyGxo2E4Y+E+QIuLhK1TpMGMRNlOCPRfpOROU=",
             ),
-            ("list_2sets.txt", "ECAjFDNIdKNLNQNRZUdZFaJadcNeQESOrRSTjTwA"),
+            ("list_2sets.txt", "ECAjFDNIdKNLNQNRZUdZFaJadcNeQESOrRSTjTw="),
             (
                 "list_uniques.txt",
                 "EBAVmDGEeGGJWJOIKKaMOPIvqUaTOWFFw4cS/EShnFW6XamRm3mCvIA=",
