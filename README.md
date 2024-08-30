@@ -1,8 +1,6 @@
 # altered-deckfmt
 
 > This repository is a Python library of the original specification defined in [Taum/altered-deckfmt](https://github.com/Taum/altered-deckfmt).
-> 
-> This is a work in progress and many changes are still pending to be made. Among them, rewriting this file to adapt it to Python code.
 
 A Compact format to share decklists for Altered TCG.
 
@@ -35,52 +33,61 @@ Can be encoded into the string:
 EBAk3DNQrEPHVKmIvGLLHMPONZvTFcuZvVPWLYHaHZA=
 ```
 
-This project provides a Javascript/Typescript module that can either be imported into a NodeJS project or loaded into a web page.
+This project provides a Python package that can be imported into a project.
 
 Demo page to encode/decode decklists: https://taum.github.io/altered-deckfmt/
 
-A format specification in available in [FORMAT_SPEC.md](FORMAT_SPEC.md).
+A format specification in available in [FORMAT_SPEC.md](FORMAT_SPEC.md). Note that this is a Python version of [the original spec](https://github.com/Taum/altered-deckfmt/blob/main/FORMAT_SPEC.md), which I will try to keep up to date.
+
+## Installation
+
+Install the [PyPI package](https://pypi.org/project/altered-deckfmt/) using `pip`.
+```bash
+pip install altered-deckfmt
+```
 
 ## Usage
 
-see `src/test/encoding.test.ts` for an example of using these functions
+Encode a decklist:
 
-```
-import { encodeList } from 'altered-deckfmt'
+```python
+from altered_deckfmt import encode, EncodeException
 
-const myList = "1 ALT_CORE_B_YZ_03_C\n3 ALT_CORE_B_BR_16_R2 ..."
-const base64deck = encodeList(myList)
 
-console.log(base64deck) // "EBAk3DNQrEPHVKmIvGLLHMPONZvTFcuZvVPWLYHaHZA="
-```
+decklist = """1 ALT_COREKS_B_AX_08_C
+1 ALT_COREKS_B_AX_03_C
+1 ALT_COREKS_B_AX_08_R1
+"""
 
-```
-import { decodeList } from 'altered-deckfmt'
-
-const myBase64id = "EBAk3DNQrEPHVKmIvGLLHMPONZvTFcuZvVPWLYHaHZA="
-const decklist = decodeList(myBase64id)
-
-console.log(decklist) // "1 ALT_CORE_B_YZ_03_C\n3 ALT_CORE_B_BR_16_R2 ..."
-```
-
-### Import in a web page
-
-Use the `UMD` import provided in the `dist` folder.
-See [dist-demo.html](dist-demo.html) for an example of how to use in your page.
-
-## Developement
-
-### Install
-```
-yarn install
+try:
+    encoded_decklist = encode(decklist)
+    print(encoded_decklist)
+    # EBAQ0oEjEoQ=
+except EncodeException:
+    print("Failed to encode the decklist")
 ```
 
-### Development sandbox
-```
-yarn dev
+Decode a decklist:
+
+```python
+from altered_deckfmt import decode, DecodeException
+
+
+encoded_decklist = "EBAQ0oEjEoQ="
+
+try:
+    decklist = decode(encoded_decklist)
+    print(decklist)
+    # 1 ALT_COREKS_B_AX_08_C
+    # 1 ALT_COREKS_B_AX_03_C
+    # 1 ALT_COREKS_B_AX_08_R1
+except DecodeException:
+    print("Failed to decode the decklist")
 ```
 
-### Run Tests
+
+##  Run Tests
+
 ```
-yarn test
+python -m unittest discover tests
 ```
