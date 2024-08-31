@@ -37,7 +37,7 @@ This project provides a Python package that can be imported into a project.
 
 Demo page to encode/decode decklists: https://taum.github.io/altered-deckfmt/
 
-A format specification in available in [FORMAT_SPEC.md](FORMAT_SPEC.md). Note that this is a Python version of [the original spec](https://github.com/Taum/altered-deckfmt/blob/main/FORMAT_SPEC.md), which I will try to keep up to date.
+Note that this is a Python implementation of [the original format specification](https://github.com/Taum/altered-deckfmt/blob/main/FORMAT_SPEC.md), which I will try to keep up to date.
 
 ## Installation
 
