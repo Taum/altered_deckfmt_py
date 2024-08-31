@@ -1,7 +1,7 @@
 import logging
 
 from .exceptions import DecodeException
-from .models import CardSet, DeckFMT, Faction, Rarity
+from .models import CardSet, DeckFMT, Faction, Product, Rarity
 from .utils import base64_to_string, decode_chunk
 
 logger = logging.getLogger(__name__)
@@ -47,12 +47,12 @@ def decode(string: str) -> str:
 
             # Extract the amount of copies of the card
             index, quantity = _decode_card_ref_quantity(string, index)
+
             # Extract the card's data
-            index, faction, number, rarity, unique_id = _decode_card(string, index)
+            index, *card_data = _decode_card(string, index)
+            
             # Build the card reference with the extracted information
-            reference = _build_card_referece(
-                set_code, faction, number, rarity, unique_id
-            )
+            reference = _build_card_referece(set_code, *card_data)
 
             logger.debug(f"Parsed {quantity} units of '{reference}'")
 
@@ -147,7 +147,7 @@ def _decode_card_ref_quantity(string: str, index: int) -> tuple[int, int]:
     return index, quantity
 
 
-def _decode_card(string: str, index: int) -> tuple[int, str, int, str, int]:
+def _decode_card(string: str, index: int) -> tuple[int, str, str, int, str, int]:
     """Extract the card's information.
 
     Args:
@@ -155,10 +155,21 @@ def _decode_card(string: str, index: int) -> tuple[int, str, int, str, int]:
         index (int): The start position of the card's data.
 
     Returns:
-        tuple[int, str, int, str, int]: The index, the faction code, the number within
-                                        the faction, the rarity code and the unique id
-                                        if any.
+        tuple[int, str, str, int, str, int]: The index, the product code, the faction
+                                             code, the number within the faction, the
+                                             rarity code and the unique id if any.
     """
+
+    # Extract if the default product (B) is being used
+    default_product = decode_chunk(string, index, DeckFMT.CARD_BOOSTER_BITS)
+    index += DeckFMT.CARD_BOOSTER_BITS
+    if default_product:
+        product_code = DeckFMT.DEFAULT_PRODUCT
+    else:
+        # If the default product is not used, extract the product from the next bits
+        product_num = decode_chunk(string, index, DeckFMT.CARD_PRODUCT_BITS)
+        index += DeckFMT.CARD_PRODUCT_BITS
+        product_code = Product(product_num).name
 
     # Extract the faction id and convert it into its string representation
     # (e.g. 1 => AX)
@@ -183,16 +194,17 @@ def _decode_card(string: str, index: int) -> tuple[int, str, int, str, int]:
     else:
         unique_id = None
 
-    return index, faction_code, number_in_faction, rarity_code, unique_id
+    return index, product_code, faction_code, number_in_faction, rarity_code, unique_id
 
 
 def _build_card_referece(
-    card_set: str, faction: str, number: int, rarity: str, unique_id: int
+    card_set: str, product: str, faction: str, number: int, rarity: str, unique_id: int
 ) -> str:
     """Receive a card's identifying factors and generate its reference.
 
     Args:
         card_set (str): The code of the set.
+        product (str): The code of the product.
         faction (str): The code of the faction.
         number (int): The number of the card in its own faction.
         rarity (str): The code of the rarity.
@@ -203,9 +215,9 @@ def _build_card_referece(
     """
 
     if faction != "NE":
-        return f"ALT_{card_set}_B_{faction}_{number:02d}_{rarity}" + (
+        return f"ALT_{card_set}_{product}_{faction}_{number:02d}_{rarity}" + (
             f"_{unique_id}" if unique_id else ""
         )
     else:
         # For some reason the Mana Token has its number with a single digit instead of 2
-        return f"ALT_{card_set}_B_{faction}_{number}_{rarity}"
+        return f"ALT_{card_set}_{product}_{faction}_{number}_{rarity}"

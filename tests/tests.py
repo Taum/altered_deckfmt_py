@@ -8,17 +8,17 @@ class TestDeckFMT(unittest.TestCase):
         self.decklist_files = [
             (
                 "list_1offs.txt",
-                "ECAU0jEoUoInItIlUqUkUmErEuYwKLkyGxo2E4Y+E+QIuLhK1TpMGMRNlOCPRfpOROU=",
+                "ECAU2RjKFlBScpaUlWVLJFkwysZc0wLFzMh2NTYZw0+GfIEXS4ZWtOmYNMRmyzgp6N+mcjOU",
             ),
-            ("list_2sets.txt", "ECAjFDNIdKNLNQNRZUdZFaJadcNeQESOrRSTjTw="),
+            ("list_2sets.txt", "ECAjGhnSHpR0s6gdRaqPWRrRVp64deQESnV0UqcdPA=="),
             (
                 "list_uniques.txt",
-                "EBAVmDGEeGGJWJOIKKaMOPIvqUaTOWFFw4cS/EShnFW6XamRm3mCvIA=",
+                "EBAVnBjhHww4lcSeILFNjDx5S+so2TPLDRcOHGX4iUOcWt1XazI5t8wW8g==",
             ),
-            ("list_yzmir.txt", "EBAk3DNQrEPHVKmIvGLLHMPONZvTFcuZvVPWLYHaHZA="),
-            ("test_extd_qty.txt", "EBAgTSZQ"),
-            ("test_long_uniq.txt", "EBARFnwTSWfJw9Z8wOVn///A"),
-            ("test_mana_orb.txt", "EBAg3CN8LhA="),
+            ("list_yzmir.txt", "EBAk3hnUK4h8daVOIvjFyx5h846zfTGuXmb6p9YuwPaHsgA="),
+            ("test_extd_qty.txt", "EBAgTTMo"),
+            ("test_long_uniq.txt", "EBARGz4JpNnycPbPmBy2f//8"),
+            ("test_mana_orb.txt", "EBAg3hHfC8IA"),
         ]
 
     def test_encode_string(self):

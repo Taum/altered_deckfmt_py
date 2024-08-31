@@ -68,6 +68,13 @@ class CardSet(FMTEnum):
     CORE = 2
 
 
+class Product(FMTEnum):
+    """Enum representing the extended products (other than boosters)"""
+
+    P = 1
+    A = 2
+
+
 class Faction(FMTEnum):
     """Enum representing the different factions."""
 
@@ -103,6 +110,7 @@ class DeckFMT:
     """
 
     VERSION_NUMBER = 1
+    DEFAULT_PRODUCT = "B"
 
     VERSION_BITS = 4
     GROUPS_COUNT_BITS = 8
@@ -110,6 +118,8 @@ class DeckFMT:
     REFS_COUNT_BITS = 6
     CARD_QUANTITY_BITS = 2
     CARD_EXTENDED_QUANTITY_BITS = 6
+    CARD_BOOSTER_BITS = 1
+    CARD_PRODUCT_BITS = 2
     CARD_FACTION_BITS = 3
     CARD_NUMBER_BITS = 5
     CARD_RARITY_BITS = 2

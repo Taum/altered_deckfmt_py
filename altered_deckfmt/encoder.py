@@ -1,5 +1,5 @@
 from .exceptions import EncodeException
-from .models import CardSet, DeckFMT, Faction, Rarity
+from .models import CardSet, DeckFMT, Faction, Product, Rarity
 from .utils import encode_chunk, parse_decklist, string_to_base64
 
 
@@ -138,8 +138,8 @@ def _encode_card_ref_quantity(quantity: int) -> str:
 
 
 def _encode_card(reference: str) -> str:
-    """Encode the card's reference. Extracts the faction, number and rarity of a card.
-    If the card is unique, it also encodes the unique id.
+    """Encode the card's reference. Extracts and encodes the product, faction, number
+    and rarity of a card. If the card is unique, it also encodes the unique id.
 
     Args:
         reference (str): A card's reference.
@@ -148,11 +148,19 @@ def _encode_card(reference: str) -> str:
         str: The encoded card.
     """
 
-    # Extract the card's information ignoring the set and product information.
-    faction, number, rarity, *extra = reference.split("_")[3:]
+    # Extract the card's information ignoring the set and product information
+    product, faction, number, rarity, *extra = reference.split("_")[2:]
+
+    # Indicate if the product is the default (B). If it isn't use some extra bits to
+    # encode the actual product
+    if product == DeckFMT.DEFAULT_PRODUCT:
+        result = encode_chunk(1, DeckFMT.CARD_BOOSTER_BITS)
+    else:
+        result = encode_chunk(0, DeckFMT.CARD_BOOSTER_BITS)
+        result += encode_chunk(Product[product], DeckFMT.CARD_PRODUCT_BITS)
 
     # Encode the extracted information
-    result = encode_chunk(Faction[faction].value, DeckFMT.CARD_FACTION_BITS)
+    result += encode_chunk(Faction[faction].value, DeckFMT.CARD_FACTION_BITS)
     result += encode_chunk(int(number), DeckFMT.CARD_NUMBER_BITS)
     result += encode_chunk(Rarity[rarity].value, DeckFMT.CARD_RARITY_BITS)
     if rarity == "U":
