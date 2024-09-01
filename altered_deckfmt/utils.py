@@ -52,8 +52,7 @@ def string_to_base64(binary_string: str) -> str:
     """
 
     # Calculate if any padding is necessary and add it
-    num_bits = len(binary_string)
-    padded_num_bits = num_bits if num_bits % 8 == 0 else num_bits + 8 - (num_bits % 8)
+    padded_num_bits = ceil_to_multiple_of(len(binary_string), 8)
     binary_string = binary_string.ljust(padded_num_bits, "0")
     # Separate the string characters in chunks of 8, convert it from base2 to decimal
     # and to a bytes object which can be converted to base64
@@ -62,7 +61,10 @@ def string_to_base64(binary_string: str) -> str:
     )
 
     # Return the base64 string removing trailing characters (e.g. b'EBAgTSZQ')
-    return str(base64.b64encode(binary_bytes))[2:-1]
+    b64encoded = str(base64.urlsafe_b64encode(binary_bytes))[2:-1]
+
+    # Strip trailing = signs since those are redundant
+    return b64encoded.replace("=", "")
 
 
 def base64_to_string(encoded_string: str) -> str:
@@ -74,12 +76,17 @@ def base64_to_string(encoded_string: str) -> str:
     Returns:
         str: The received string converted to 0s and 1s.
     """
-    decoded = base64.b64decode(encoded_string)
+    # Ensure string is properly padded with = signs, our decoder requires it
+    encoded_padded = encoded_string.ljust(ceil_to_multiple_of(len(encoded_string), 4), "=")
+    
+    decoded = base64.urlsafe_b64decode(encoded_padded)
     binary_string = bin(int.from_bytes(decoded))[2:]
     num_bytes = (len(binary_string) + 7) // 8 * 8
 
     return binary_string.zfill(num_bytes)
 
+def ceil_to_multiple_of(length, mod):
+    return length if length % mod == 0 else length + mod - (length % mod)
 
 def encode_chunk(value: int, size: int) -> str:
     """Function to receive a value, transform it to binary using `size` bits.
