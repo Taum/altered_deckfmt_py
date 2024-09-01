@@ -8,16 +8,16 @@ class TestDeckFMT(unittest.TestCase):
         self.decklist_files = [
             (
                 "list_1offs.txt",
-                "ECAU2RjKFlBScpaUlWVLJFkwysZc0wLFzMh2NTYZw0+GfIEXS4ZWtOmYNMRmyzgp6N+mcjOU",
+                "ECAU2RjKFlBScpaUlWVLJFkwysZc0wLFzMh2NTYZw0-GfIEXS4ZWtOmYNMRmyzgp6N-mcjOU",
             ),
-            ("list_2sets.txt", "ECAjGhnSHpR0s6gdRaqPWRrRVp64deQESnV0UqcdPA=="),
+            ("list_2sets.txt", "ECAjGhnSHpR0s6gdRaqPWRrRVp64deQESnV0UqcdPA"),
             (
                 "list_uniques.txt",
-                "EBAVnBjhHww4lcSeILFNjDx5S+so2TPLDRcOHGX4iUOcWt1XazI5t8wW8g==",
+                "EBAVnBjhHww4lcSeILFNjDx5S-so2TPLDRcOHGX4iUOcWt1XazI5t8wW8g",
             ),
-            ("list_yzmir.txt", "EBAk3hnUK4h8daVOIvjFyx5h846zfTGuXmb6p9YuwPaHsgA="),
+            ("list_yzmir.txt", "EBAk3hnUK4h8daVOIvjFyx5h846zfTGuXmb6p9YuwPaHsgA"),
             ("test_extd_qty.txt", "EBAgTTMo"),
-            ("test_long_uniq.txt", "EBARGz4JpNnycPbPmBy2f//8"),
+            ("test_long_uniq.txt", "EBARGz4JpNnycPbPmBy2f__8"),
             ("test_mana_orb.txt", "EBAg3hHfC8IA"),
         ]
 
