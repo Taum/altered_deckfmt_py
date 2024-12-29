@@ -1,3 +1,5 @@
+from math import ceil
+
 from .exceptions import EncodeException
 from .models import CardSet, DeckFMT, Faction, Product, Rarity
 from .utils import encode_chunk, parse_decklist, string_to_base64
@@ -40,19 +42,26 @@ def encode(string: str, sep: str = "\n") -> str:
     # }
     cards = parse_decklist(string, sep)
 
+    chunk_size = 2**DeckFMT.REFS_COUNT_BITS - 1
+    set_count = 0
+    for card_set in cards.values():
+        set_count += ceil(len(card_set) / chunk_size)
+
     # Encode the header (version + set groups count)
-    result = _encode_header(len(cards))
+    result = _encode_header(set_count)
 
     # Iterate each group set
     for card_set, cards in cards.items():
+        for chunk_index in range(0, len(cards), chunk_size):
+            chunk = cards[chunk_index : chunk_index + chunk_size]
 
-        # Encode each set data (id + card count)
-        result += _encode_set_group(card_set, len(cards))
+            # Encode each set data (id + card count)
+            result += _encode_set_group(card_set, len(chunk))
 
-        # Iterate and encode each card
-        for quantity, card in cards:
-            result += _encode_card_ref_quantity(quantity)
-            result += _encode_card(card)
+            # Iterate and encode each card
+            for quantity, card in chunk:
+                result += _encode_card_ref_quantity(quantity)
+                result += _encode_card(card)
 
     # Change the string in binary to base64
     return string_to_base64(result)
@@ -157,7 +166,7 @@ def _encode_card(reference: str) -> str:
         result = encode_chunk(1, DeckFMT.CARD_BOOSTER_BITS)
     else:
         result = encode_chunk(0, DeckFMT.CARD_BOOSTER_BITS)
-        result += encode_chunk(Product[product], DeckFMT.CARD_PRODUCT_BITS)
+        result += encode_chunk(Product[product].value, DeckFMT.CARD_PRODUCT_BITS)
 
     # Encode the extracted information
     result += encode_chunk(Faction[faction].value, DeckFMT.CARD_FACTION_BITS)
