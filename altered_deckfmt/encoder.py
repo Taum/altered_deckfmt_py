@@ -1,7 +1,7 @@
 from math import ceil
 
 from .exceptions import EncodeException
-from .models import CardSet, DeckFMT, Faction, Product, Rarity
+from .models import CardSet, DeckFMT, Faction, NumberInFactionBits, Product, Rarity
 from .utils import encode_chunk, parse_decklist, string_to_base64
 
 
@@ -53,6 +53,7 @@ def encode(string: str, sep: str = "\n") -> str:
     # Iterate each group set
     for card_set, cards in cards.items():
         for chunk_index in range(0, len(cards), chunk_size):
+            number_in_faction_bits = NumberInFactionBits[card_set].value
             chunk = cards[chunk_index : chunk_index + chunk_size]
 
             # Encode each set data (id + card count)
@@ -61,7 +62,7 @@ def encode(string: str, sep: str = "\n") -> str:
             # Iterate and encode each card
             for quantity, card in chunk:
                 result += _encode_card_ref_quantity(quantity)
-                result += _encode_card(card)
+                result += _encode_card(number_in_faction_bits, card)
 
     # Change the string in binary to base64
     return string_to_base64(result)
@@ -146,7 +147,7 @@ def _encode_card_ref_quantity(quantity: int) -> str:
         return encode_chunk(quantity, DeckFMT.CARD_QUANTITY_BITS)
 
 
-def _encode_card(reference: str) -> str:
+def _encode_card(number_in_faction_bits: int, reference: str) -> str:
     """Encode the card's reference. Extracts and encodes the product, faction, number
     and rarity of a card. If the card is unique, it also encodes the unique id.
 
@@ -170,7 +171,7 @@ def _encode_card(reference: str) -> str:
 
     # Encode the extracted information
     result += encode_chunk(Faction[faction].value, DeckFMT.CARD_FACTION_BITS)
-    result += encode_chunk(int(number), DeckFMT.CARD_NUMBER_BITS)
+    result += encode_chunk(int(number), number_in_faction_bits)
     result += encode_chunk(Rarity[rarity].value, DeckFMT.CARD_RARITY_BITS)
     if rarity == "U":
         result += encode_chunk(int(extra[0]), DeckFMT.CARD_UNIQUE_ID_BITS)

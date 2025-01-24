@@ -66,7 +66,15 @@ class CardSet(FMTEnum):
 
     COREKS = 1
     CORE = 2
+    ALIZE = 3
 
+class NumberInFactionBits(FMTEnum):
+    """Enum representing the number of bits used to encode the number of a card in
+    its faction."""
+
+    CORE = 5
+    COREKS = 5
+    ALIZE = 6
 
 class Product(FMTEnum):
     """Enum representing the extended products (other than boosters)"""
@@ -121,7 +129,6 @@ class DeckFMT:
     CARD_BOOSTER_BITS = 1
     CARD_PRODUCT_BITS = 2
     CARD_FACTION_BITS = 3
-    CARD_NUMBER_BITS = 5
     CARD_RARITY_BITS = 2
     CARD_UNIQUE_ID_BITS = 16
 

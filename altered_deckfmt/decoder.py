@@ -1,7 +1,7 @@
 import logging
 
 from .exceptions import DecodeException
-from .models import CardSet, DeckFMT, Faction, Product, Rarity
+from .models import CardSet, DeckFMT, Faction, NumberInFactionBits, Product, Rarity
 from .utils import base64_to_string, decode_chunk
 
 logger = logging.getLogger(__name__)
@@ -41,6 +41,7 @@ def decode(string: str) -> str:
     for _ in range(group_count):
         # Extract the current set group id and how many cards it contains
         index, set_code, card_count = _decode_set_group(string, index)
+        card_number_bits = NumberInFactionBits[set_code].value
 
         # Iterate each card of the set
         for _ in range(card_count):
@@ -49,7 +50,7 @@ def decode(string: str) -> str:
             index, quantity = _decode_card_ref_quantity(string, index)
 
             # Extract the card's data
-            index, *card_data = _decode_card(string, index)
+            index, *card_data = _decode_card(string, index, card_number_bits)
             
             # Build the card reference with the extracted information
             reference = _build_card_referece(set_code, *card_data)
@@ -147,12 +148,13 @@ def _decode_card_ref_quantity(string: str, index: int) -> tuple[int, int]:
     return index, quantity
 
 
-def _decode_card(string: str, index: int) -> tuple[int, str, str, int, str, int]:
+def _decode_card(string: str, index: int, number_in_faction_bits: int) -> tuple[int, str, str, int, str, int]:
     """Extract the card's information.
 
     Args:
         string (str): The encoded decklist.
         index (int): The start position of the card's data.
+        number_in_faction_bits (int): The number of bits encoding this card's number_in_faction.
 
     Returns:
         tuple[int, str, str, int, str, int]: The index, the product code, the faction
@@ -178,8 +180,8 @@ def _decode_card(string: str, index: int) -> tuple[int, str, str, int, str, int]
     index += DeckFMT.CARD_FACTION_BITS
 
     # Extract the number of the card within its own faction
-    number_in_faction = decode_chunk(string, index, DeckFMT.CARD_NUMBER_BITS)
-    index += DeckFMT.CARD_NUMBER_BITS
+    number_in_faction = decode_chunk(string, index, number_in_faction_bits)
+    index += number_in_faction_bits
 
     # Extract the rarity id and convert it into its string representation
     # (e.g. 1 => R1)
@@ -214,10 +216,11 @@ def _build_card_referece(
         str: The reference of a card.
     """
 
-    if faction != "NE":
+    if faction == "NE" and number == 1:
+        # For some reason the Mana Token (NE, 1) has its number with a single digit instead of 2
+        return f"ALT_{card_set}_{product}_{faction}_{number}_{rarity}"
+    else:
         return f"ALT_{card_set}_{product}_{faction}_{number:02d}_{rarity}" + (
             f"_{unique_id}" if unique_id else ""
         )
-    else:
-        # For some reason the Mana Token has its number with a single digit instead of 2
-        return f"ALT_{card_set}_{product}_{faction}_{number}_{rarity}"
+        
