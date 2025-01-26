@@ -18,7 +18,7 @@ class TestDeckFMT(unittest.TestCase):
             ("list_yzmir.txt", "EBAk3hnUK4h8daVOIvjFyx5h846zfTGuXmb6p9YuwPaHsgA"),
             ("test_alize_1.txt", "EBAw3bR21djwTSA"),
             ("test_alize_2.txt", "ECAwm4xsMAgmxn04"),
-            ("test_alize_neutrals.txt", "ECAgXwgGC-EA"),
+            ("test_alize_neutrals.txt", "ECAgXwgGE-CPhAA"),
             ("test_extd_qty.txt", "EBAgTTMo"),
             ("test_long_uniq.txt", "EBARGz4JpNnycPbPmBy2f__8"),
             ("test_mana_orb.txt", "EBAg3hHfC8IA"),

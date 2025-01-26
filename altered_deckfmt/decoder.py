@@ -216,8 +216,9 @@ def _build_card_referece(
         str: The reference of a card.
     """
 
-    if faction == "NE" and number == 1:
-        # For some reason the Mana Token (NE, 1) has its number with a single digit instead of 2
+    if faction == "NE" and (card_set == "COREKS" or card_set == "CORE"):
+        # For some reason the Mana Confluence token (NE_1) has its number with a
+        # single digit in Core/CoreKS. This was fixed in Alize.
         return f"ALT_{card_set}_{product}_{faction}_{number}_{rarity}"
     else:
         return f"ALT_{card_set}_{product}_{faction}_{number:02d}_{rarity}" + (
